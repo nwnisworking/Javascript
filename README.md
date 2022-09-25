@@ -1,2 +1,2 @@
 # Javascript
-Javascript helper 
+Javascript library 
