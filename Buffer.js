@@ -62,6 +62,37 @@ export default class Buffer extends Array{
 
 	writeInt64(value, {offset = null, endian = 'BE'} = {}){ return this.#set(value, offset, {endian, bit : 64, type : 'signed'}) }
 
+	read(offset, length = null){
+		const empty_len = !length
+
+		length = empty_len ? offset : length
+		offset = empty_len ? this.offset : offset
+
+		this.#offset+= empty_len ? length : 0
+		return this.slice(offset, length + offset)
+	}
+
+	skip(offset){
+		this.offset+= offset
+		return this
+	}
+
+	// read(offset, length = null){
+	// 	// Might as well use slice instead. Will change the code later
+	// 	const arr = [],
+	// 	empty_len = !length
+
+	// 	length = empty_len ? offset : length
+	// 	offset = BigInt(empty_len ? this.offset : offset)
+
+
+	// 	for(let i = offset; i < BigInt(length) + offset; i++)
+	// 		arr.push(this[i])
+
+	// 	this.#offset+= Number(empty_len ? length : 0)
+	// 	return new Buffer(arr)
+	// }
+
 	readHalf(offset, endian = 'BE'){ return this.#readFloat(this.#read(offset, {bit : 16, endian}), 16) }
 
 	readSingle(offset, endian = 'BE'){ return this.#readFloat(this.#read(offset, {bit : 32, endian}), 32) }
@@ -151,6 +182,8 @@ export default class Buffer extends Array{
 			const index = endian === 'BE' ? 
 			offset + (bit / 8) - i - 1 :
 			i - offset
+
+			if(!this[i]) break
 
 			temp+= BigInt(this[i]) << BigInt(index * 8)
 		}
