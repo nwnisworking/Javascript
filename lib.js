@@ -71,16 +71,25 @@ export function escapeRegex(str){
 	return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); // $& means the whole matched string
 }
 /**
- * get the range of unsigned/signed bits 
+ * Get the range of byte length
  * @param {number} bit 
- * @param {'unsigned'|'signed'} type 
+ * @param {'u'|'i'|'uint'|'int'|'unsigned'|'signed'} type 
  */
-export function bitRange(bit, type = 'unsigned'){
+export function bitLen(bit, type = 'u'){
 	if(bit % 8 !== 0)
-		throw new Error('bit not divisible by 8')
-	const value = 2 ** bit,
-	val = value - 1,
-	y = type === 'unsigned' ? val : Math.floor(val / 2),
-	x = type === 'unsigned' ? 0 : y - val
+		throw new Error('Not divisible by 8')
+
+	if(['s', 'int', 'signed'].indexOf(type) > -1)
+		type = 's'
+	else
+		type = 'u'
+		
+	bit = BigInt(bit)
+
+	const value = 1n << bit,
+	val = value - 1n,
+	val2 = (1n << (bit - 1n)) - 1n,
+	y = type === 'u' ? val : val2,
+	x = type === 'u' ? 0 : ~val2
 	return {x, y, value}
 }
