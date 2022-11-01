@@ -114,7 +114,7 @@ export default class Temporal{
 		return this.#date.getTime()
 	}
 
-	dayOfWeek(){
+	day(){
 		return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][this.#date.getDay()]
 	}
 }
