@@ -1,4 +1,6 @@
 class Buf extends Array{
+	#offset = 0
+
 	constructor(data = []){
 		super()
 
@@ -25,7 +27,7 @@ class Buf extends Array{
 					}
 					else if(f.includes('get')){
 						let [offset, isLE = false] = arg
-						return p.#get(BigInt(offset), isLE, type, BigInt(bit))
+						return p.#get(!offset ? null  : BigInt(offset), isLE, type, BigInt(bit))
 					}
 				}
 			}
@@ -100,6 +102,7 @@ class Buf extends Array{
 	}
 
 	#get(offset, endian, type, bit){
+		if(!offset) offset = this.#offset
 		const {size, y} = Buf.range(bit, type)
 		let val = this.#read(Number(offset), Number(bit) / 8),
 		total = 0n
@@ -110,6 +113,7 @@ class Buf extends Array{
 		for(let i = 0n; i < val.length; i++)
 			total+= BigInt(val[i]) << (i * 8n)
 
+		this.#offset+= Number(bit / 8n)
 		return type === 'uint' ? total : (total > y ? total - size : total)
 	}
 
