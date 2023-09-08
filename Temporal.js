@@ -273,8 +273,3 @@ export default class Temporal{
     return new this(new Date())
   }
 }
-
-const a = new Temporal({year : 2011, month : 10, date : 25, hour : 11, minute : 5, second : 10, ms : 500})
-
-console.log(a.format("g:i:s A"))
-
