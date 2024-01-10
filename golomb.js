@@ -1,4 +1,4 @@
-class Golomb{
+export class Golomb{
   /** @type {DataView} */
   dv
   
