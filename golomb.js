@@ -1,4 +1,7 @@
-export default class Golomb{
+export default const { buffer } = new Uint8Array([0x67,0x4d,0x40,0x1f,0xe8,0x80,0x28,0x02,0xdd,0x80,0xb5,0x01,0x01,0x01,0x40,0x00,0x00,0xfa,0x40,0x00,0x2e,0xe0,0x03,0xc6,0x0c,0x44,80]),
+dv = new DataView(buffer)
+
+class Golomb{
   /** @type {DataView} */
   dv
   
@@ -45,14 +48,10 @@ export default class Golomb{
 
     if(available_bits < 0){
       available_bits = Math.abs(available_bits)
-      size-= available_bits
   
       this.offset-= available_bits
-      /**
-       * Since the size went over to the next byte, we will mask the value from the LSB 
-       * and shift by how much it overflows then read the next bit based on the overflow length
-       */
-      return (v & ((1 << size) - 1)) << available_bits | this.readBits(available_bits)
+
+      return ((v << available_bits) & ((1 << size) - 1)) | this.readBits(available_bits)
     }
     else{
       return v >>> available_bits & (1 << size) - 1
